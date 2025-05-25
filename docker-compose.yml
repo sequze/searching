@@ -1,0 +1,36 @@
+services:
+  pg:
+    image: postgres # Используется официальный образ PostgreSQL
+    environment:
+      POSTGRES_DB: ${PG_NAME} # Создаем базу данных с именем search
+      POSTGRES_USER: ${PG_USER}
+      # Создаем пользователя с именем user и паролем password
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes: # Чтобы данные не терялись при пересоздании контейнера
+      [pg-data:/var/lib/postgresql/data]
+    ports:
+      - "5432:5432"
+  
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+
+volumes:
+  pg-data:
