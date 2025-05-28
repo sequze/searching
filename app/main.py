@@ -19,4 +19,3 @@ app.include_router(api_router, prefix=settings.api_prefix.prefix)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True)
-    
